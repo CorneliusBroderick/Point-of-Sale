@@ -1,6 +1,8 @@
 package ie.ul.cbroderick.pointofsale;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.service.autofill.TextValueSanitizer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -65,7 +67,16 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        // TODO: Later worry about menus.
+        switch (item.getItemId()){
+            case R.id.action_reset:
+                mCurrentItem = new Item();
+                showCurrentItem();
+                return true;
+            case R.id.action_settings:
+                //startActivity(new Intent((Settings.ACTION_SETTINGS)));
+                startActivity(new Intent((Settings.ACTION_LOCALE_SETTINGS)));
+                return true;
+        }
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
