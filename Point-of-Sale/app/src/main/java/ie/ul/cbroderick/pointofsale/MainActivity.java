@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mNameTextView, mQuantityTextView, mDateTextView;
     private Item mCurrentItem;
+    private Item mClearedItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +70,21 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
             case R.id.action_reset:
+                mClearedItem = mCurrentItem;
                 mCurrentItem = new Item();
                 showCurrentItem();
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout),
+                        "Item cleared", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCurrentItem = mClearedItem;
+                        showCurrentItem();
+                        Snackbar.make(findViewById(R.id.coordinator_layout),
+                                "Item restored", Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+                snackbar.show();
                 return true;
             case R.id.action_settings:
                 //startActivity(new Intent((Settings.ACTION_SETTINGS)));
