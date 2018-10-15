@@ -133,7 +133,9 @@ public class MainActivity extends AppCompatActivity {
                 });
                 snackbar.show();
                 return true;
-
+            case R.id.action_clear_all:
+                clearAll();
+                return true;
             case R.id.action_search:
                 showSearchDialog();
                 return true;
@@ -148,6 +150,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void clearAll() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.clear_all);
+        builder.setMessage("Are you sure you want to clear all the items? This cannot be undone");
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mItems.clear();
+                mCurrentItem =new Item("---", 0, new GregorianCalendar());
+                showCurrentItem();
+            }
+        });
+        builder.setNegativeButton(android.R.string.no, null);
+        builder.create().show();
+
     }
 
     private void showSearchDialog() {
