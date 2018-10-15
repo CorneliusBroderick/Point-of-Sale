@@ -10,12 +10,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -36,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
         mNameTextView = findViewById(R.id.name_text);
         mQuantityTextView = findViewById(R.id.quantity_text);
         mDateTextView = findViewById(R.id.date_text);
+
+        registerForContextMenu(mNameTextView);
+
 
         mItems.add(new Item("Example 1", 30, new GregorianCalendar()));
         mItems.add(new Item("Example 2", 40, new GregorianCalendar()));
@@ -107,6 +112,28 @@ public class MainActivity extends AppCompatActivity {
         // Boilerplate code. Don't mess with.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.menu_context, menu);
+    }
+
+    @Override
+        public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                Toast.makeText(this, "TODO Edit", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.action_remove:
+                Toast.makeText(this, "TODO Remove", Toast.LENGTH_SHORT).show();
+                return true;
+
+
+        }
+        return super.onContextItemSelected(item);
     }
 
     @Override
