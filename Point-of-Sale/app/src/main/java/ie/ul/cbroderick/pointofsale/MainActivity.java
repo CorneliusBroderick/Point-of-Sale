@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -55,29 +54,25 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addItem();
+                insertItem(false);
             }
         });
     }
 
-    private void addItem() {
+    private void insertItem(final boolean isEdit) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        // Customize the dialog for needs.
-        // Simpler dialog
-//        builder.setTitle("My title");
-//        builder.setMessage("Hello");
-//        builder.setPositiveButton("OK", null);
-
-        builder.setTitle(R.string.add_item);
-
         View view = getLayoutInflater().inflate(R.layout.dialog_add, null, false);
         builder.setView(view);
-
         final EditText namedEditText = view.findViewById(R.id.edit_name);
         final EditText quantityEditText = view.findViewById(R.id.edit_quantity);
         final CalendarView deliveryDateView = view.findViewById(R.id.calendar_view);
         final GregorianCalendar calender = new GregorianCalendar();
+
+        if (isEdit){
+            namedEditText.setText(mCurrentItem.getName());
+            quantityEditText.setText("" + mCurrentItem.getQuantity());
+            deliveryDateView.setDate(mCurrentItem.getDeliveryDateTime());
+        }
 
         deliveryDateView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -90,9 +85,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String name = namedEditText.getText().toString();
                 int quantity = Integer.parseInt(quantityEditText.getText().toString());
-                mCurrentItem = new Item(name, quantity, calender);
+                if (isEdit) {
+                    mCurrentItem.setName(name);
+                    mCurrentItem.setQuantity(quantity);
+                    mCurrentItem.setDeliveryDate(calender);
+                }
+                else {
+                    mCurrentItem = new Item(name, quantity, calender);
+                    mItems.add(mCurrentItem);
+                }
                 showCurrentItem();
-                mItems.add(mCurrentItem);
             }
         });
         builder.setNegativeButton(android.R.string.cancel, null);
@@ -124,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit:
-                Toast.makeText(this, "TODO Edit", Toast.LENGTH_SHORT).show();
+                insertItem(true);
                 return true;
 
             case R.id.action_remove:
